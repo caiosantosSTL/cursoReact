@@ -49,6 +49,37 @@ class App extends Component {
     this.setState({ count: count + 1 })
   }
 
+
+  handleTimeout = () => {
+    const { post } = this.state2
+    const {count} = this.state
+
+    post[0].title = 'This was modificated'
+    
+
+    this.timeoutUpdate = setTimeout(() => {
+      this.setState({ post, count: count+1 })
+    }, 4000);
+  }
+
+  timeoutUpdate = null;
+
+  // *** hooks life cycle
+  componentDidMount() { // native func
+    //console.log('mounted all ');
+    this.handleTimeout()
+  }
+
+  componentDidUpdate(){ // update loop
+    //clearTimeout(this.timeoutUpdate)
+    this.handleTimeout()
+  }
+
+  componentWillUnmount(){ // when update de component, the timeout reset
+    clearTimeout(this.timeoutUpdate) 
+  }
+
+
   render() {
     const { name, count } = this.state;
 
@@ -77,7 +108,7 @@ class App extends Component {
           {
             post.map(
               post => <div key={post.id}>
-                <li >{post.title}</li>
+                <li >{post.title} -- {count}</li>
                 <p>{post.body}</p>
               </div>
             )
